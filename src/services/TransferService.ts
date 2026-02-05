@@ -10,18 +10,18 @@ interface TransferInput {
 
 export class TransferService {
   async transfer({ fromUserId, toUserId, amount, idempotencyKey }: TransferInput) {
-    // Idempotency
+ 
     const existing = await TransactionLog.findOne({ where: { idempotencyKey } });
     if (existing) return existing;
 
     return await sequelize.transaction(async (t) => {
-      // 1. Create PENDING transaction log
+      //  Create PENDING transaction log
       const txLog = await TransactionLog.create(
         { fromUserId, toUserId, amount, idempotencyKey, status: "PENDING" },
         { transaction: t }
       );
 
-      // 2. Lock users
+      //  Lock users
       const fromUser = await User.findByPk(fromUserId, { transaction: t, lock: t.LOCK.UPDATE });
       const toUser = await User.findByPk(toUserId, { transaction: t, lock: t.LOCK.UPDATE });
       if (!fromUser || !toUser) throw new Error("Invalid user");
@@ -42,7 +42,7 @@ export class TransferService {
       );
 
 
-      // 4. Credit user
+      //  Credit user
       await LedgerEntry.create(
         { transactionId, accountId: pendingAccountId, entryType: "DEBIT", amount, status: "POSTED", referenceType: "TRANSFER", referenceId: txLog.id },
         { transaction: t }
