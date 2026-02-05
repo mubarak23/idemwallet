@@ -225,3 +225,37 @@ npx jest
 - Retry-safe pending transactions  
 
 ---
+
+## InterestService Unit Tests
+
+Test results for `InterestService`:
+
+```
+ PASS  src/services/test/InterestService.test.ts
+  InterestService
+    ✓ calculates correct daily interest for 100000 principal (2 ms)
+    ✓ calculates correct interest on leap year (366 days)
+    ✓ handles zero balance correctly
+    ✓ rounds down interest correctly
+    ✓ does not lose precision with large numbers
+```
+
+### Coverage Report
+
+| File                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
+|----------------------|---------|----------|---------|---------|------------------|
+| **All files**        | 65.21   | 0        | 50      | 65.21   |                  |
+| config               | 100     | 100      | 100     | 100     |                  |
+| &nbsp;&nbsp;database.ts | 100  | 100      | 100     | 100     |                  |
+| models               | 100     | 100      | 100     | 100     |                  |
+| &nbsp;&nbsp;User.ts  | 100     | 100      | 100     | 100     |                  |
+| services             | 46.66   | 0        | 50      | 46.66   |                  |
+| &nbsp;&nbsp;InterestService.ts | 46.66 | 0 | 50 | 46.66 | 24-36 |
+
+**Test Summary**
+
+- Test Suites: 1 passed, 1 total  
+- Tests: 5 passed, 5 total  
+- Snapshots: 0 total  
+- Time: 1.302 s  
+- Ran all test suites successfully

@@ -8,7 +8,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "migrate": "sequelize db:migrate",
-    "seed": "sequelize db:seed:all"
+    "seed": "sequelize db:seed:all",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "big.js": "^7.0.1",
