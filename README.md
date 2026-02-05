@@ -259,3 +259,63 @@ Test results for `InterestService`:
 - Snapshots: 0 total  
 - Time: 1.302 s  
 - Ran all test suites successfully
+
+
+## API Endpoint: Transfer Funds
+
+### **POST /api/transfer**
+
+Transfers funds from one user to another in a **crash-safe, idempotent, ledger-backed** manner.
+
+- **Creates a TransactionLog** (PENDING)  
+- **Updates ledger entries** for DEBIT/CREDIT  
+- **Updates balances safely** using `BigInt`  
+- **Marks transaction as COMPLETED** if successful  
+
+---
+
+### **Request Payload**
+
+```json
+{
+  "fromUserId": "a065ab90-eeee-43e4-ab9e-5d2a395b432a",
+  "toUserId": "111ab4d3-0d77-490c-a4f1-afe365f9faf3",
+  "amount": 5000,
+  "idempotencyKey": "5a26dfa5c0e6b9b065a"
+}
+```
+
+**Field Descriptions:**
+
+| Field             | Type   | Description |
+|------------------|--------|-------------|
+| fromUserId        | string | UUID of the sender |
+| toUserId          | string | UUID of the recipient |
+| amount            | number | Transfer amount in minor units (e.g., cents, kobo, sats) |
+| idempotencyKey    | string | Unique key to prevent double processing |
+
+---
+
+### **Response (Success Example)**
+
+```json
+{
+  "transactionId": "d8f0c5c1-2c4a-4a1b-9f45-1234567890ab",
+  "status": "COMPLETED",
+  "fromUserId": "a065ab90-eeee-43e4-ab9e-5d2a395b432a",
+  "toUserId": "111ab4d3-0d77-490c-a4f1-afe365f9faf3",
+  "amount": 5000
+}
+```
+
+**Notes:**
+
+- If the same `idempotencyKey` is sent twice, the transaction will **not be processed again**; the original result is returned.  
+- Any failure during the transaction will **roll back all DB changes**, preserving ledger and balances.  
+- Suitable for **mobile and web clients** with low-latency, crash-safe transfers.
+
+
+
+### **GET /api/calculateInterest**
+
+Calculates the **daily interest** for a user based on a **27.5% annual rate**, using precise arithmetic to avoid floating-point errors.
