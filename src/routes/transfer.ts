@@ -1,6 +1,5 @@
 import { Router } from "express";
 import transferService from "../services/TransferService";
-import InterestService from "../services/InterestService";
 
 const router = Router();
 
